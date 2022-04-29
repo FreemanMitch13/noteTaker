@@ -1,20 +1,20 @@
-const note = require('express').Router();
+const router = require('express').Router();
 const { readFromFile, readAndAppend, writeToFile } = require('../helpers/fsUtils');
-const { v4: uuidv4 } = require('uuid');
+const uuid = require('../helpers/uuid');
 
-note.get('/', (req, res) =>
+router.get('/notes', (req, res) =>
   readFromFile('./db/db.json').then((data) => res.json(JSON.parse(data)))
 );
 
-note.post('/', (req, res) => {
-    
+router.post('/notes', (req, res) => {
+    console.log("Id: ", uuid)
     const { title, text } = req.body;
   
     if (req.body) {
       const newNote={
         title,
         text,
-        id: uuidv4()
+        id: uuid()
       };
       readAndAppend(newNote, './db/db.json'); 
       res.json('Your Note has been added');
@@ -23,7 +23,7 @@ note.post('/', (req, res) => {
     }
   });
   
-  note.delete('/:id', (req, res) => {
+  router.delete('/notes/:id', (req, res) => {
       const Id = req.params.id;
       readFromFile('./db/db.json').then((data) => JSON.parse(data)).then((json) => {
           const result = json.filter((note) => note.id !==Id);
@@ -33,4 +33,4 @@ note.post('/', (req, res) => {
   });
 
 
-module.exports = note;
+module.exports = router;
