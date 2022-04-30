@@ -17,9 +17,9 @@ router.post('/notes', (req, res) => {
         id: uuid()
       };
       readAndAppend(newNote, './db/db.json'); 
-      res.json('Your Note has been added');
+      return res.json('Your Note has been added');
     } else {
-      res.json('Error');
+      return res.json('Error');
     }
   });
   
@@ -28,7 +28,7 @@ router.post('/notes', (req, res) => {
       readFromFile('./db/db.json').then((data) => JSON.parse(data)).then((json) => {
           const result = json.filter((note) => note.id !==Id);
         writeToFile('./db/db.json', result);
-        res.json('Your Note has been deleted');
+        return res.json('Your Note has been deleted');
       });
   });
 
